@@ -1,0 +1,77 @@
+#root {
+    -fx-background: #1d1e25;
+    -fx-background-radius: 2.5px;
+}
+#title {
+    -fx-text-fill: #dadada;
+    -fx-font-size: 50px;
+    -fx-font-smoothing-type: gray;
+    -fx-font-family: 'Arial Narrow';
+}
+#subtitle {
+    -fx-text-fill: #dadada;
+    -fx-font-size: 18px;
+    -fx-font-smoothing-type: gray;
+    -fx-font-family: 'Arial Narrow';
+}
+#timelab {
+    -fx-text-fill: #dadada;
+    -fx-font-size: 40;
+    -fx-font-smoothing-type: gray;
+    -fx-font-family: 'Arial Narrow';
+}
+#status-bar {
+    -fx-text-fill: #1d1e25;
+    -fx-font-size: 16px;
+    -fx-font-family: 'Arial Narrow';
+    -fx-background-color: #dadada99;
+    -fx-padding: 3 30 3 30;
+    -fx-background-radius: 2.5px;
+}
+#status-bar-undec {
+    -fx-text-fill: #dadada99;
+    -fx-font-size: 18px;
+    -fx-font-family: 'Arial Narrow';
+}
+#addrlab {
+    -fx-text-fill: #dadada99;
+    -fx-font-size: 12px;
+    -fx-font-family: 'Arial Narrow';
+}
+#hintlab {
+    -fx-text-fill: #dadada;
+    -fx-font-size: 12px;
+    -fx-font-family: 'Arial Narrow';
+}
+#linktf {
+    -fx-background-color: #D9D9D90D;
+    -fx-font-size: 16px;
+    -fx-font-family: 'Arial Narrow';
+    -fx-text-fill: #dadada;
+    -fx-background-radius: 2.5px;
+}
+#linktf:focused {
+    -fx-border-width: 1;
+    -fx-border-color: #dadadacc;
+    -fx-border-radius: 2.5px;
+}
+
+#confirmbutton {
+    -fx-background-color: #D9D9D90D;
+    -fx-border-radius: 2.5px;
+}
+#confirmbutton:focused {
+    -fx-border-width: 0;
+    -fx-border-color: #00000000;
+    -fx-border-radius: 2.5px;
+}
+#linktfnotify {
+    -fx-border-width: 1;
+    -fx-border-color: #75d49c;
+    -fx-border-radius: 2.5px;
+    -fx-background-color: #D9D9D90D;
+    -fx-font-size: 16px;
+    -fx-font-family: 'Arial Narrow';
+    -fx-text-fill: #dadada;
+    -fx-background-radius: 2.5px;
+}

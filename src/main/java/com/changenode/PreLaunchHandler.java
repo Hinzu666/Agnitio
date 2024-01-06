@@ -1,0 +1,65 @@
+package com.changenode;
+
+import org.json.simple.JSONObject;
+import org.json.simple.parser.JSONParser;
+import org.json.simple.parser.ParseException;
+
+import java.io.*;
+
+public class PreLaunchHandler {
+    private JSONObject json;
+    private File file;
+    private String PATH = "src/main/resources/data/userdata.JSON";
+    boolean notMyFirstTimeAroundHere() throws IOException, ParseException {
+
+        //check if datafile exists
+        //if so, check if valid address
+
+        if (!checkFileAvailibility()) {
+            return false;
+        }
+        json = getJSON();
+
+        if (!json.containsKey("SavedLink")) {
+            return false;
+        }
+        return true;
+    }
+
+    public boolean validLink() {
+        if (!json.containsKey("SavedLink")) {
+            return false;
+        }
+
+        String link = (String) json.get("SavedLink");
+
+        //TODO: actually something here
+
+        return false;
+    }
+    public boolean validLink(String link) {
+        //TODO: actually something here
+        return false;
+    }
+
+    private JSONObject getJSON() throws IOException, ParseException {
+        JSONParser parser = new JSONParser();
+        return (JSONObject) parser.parse(new FileReader(PATH));
+    }
+    private boolean checkFileAvailibility() throws IOException {
+        file = new File(PATH);
+        if (!file.exists()) {
+            boolean res = file.createNewFile();
+            System.out.println("PRELAUNCH: I haven't been here before - create result: ["+res+"]");
+
+            FileWriter fw = new FileWriter(PATH);
+            fw.write(new JSONObject().toJSONString());
+            fw.flush();
+            fw.close();
+
+            return false;
+        } else {
+            return true;
+        }
+    }
+}
