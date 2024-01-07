@@ -65,7 +65,6 @@ public class DatasetWidget  {
                     box.setStyle("-fx-background-color: #dadada99; -fx-background-radius: 1px;");
 
                     listener.onHide();
-                    //TODO: interface hide from chart
 
                 } else {
                     enabled = true;

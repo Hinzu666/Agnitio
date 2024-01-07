@@ -1,6 +1,8 @@
 package com.changenode;
 
 import com.changenode.interfaces.ErrorInterface;
+import com.changenode.interfaces.ThreadInterface;
+import javafx.application.Platform;
 import javafx.scene.control.Label;
 import org.apache.poi.openxml4j.exceptions.NotOfficeXmlFileException;
 import org.json.simple.parser.ParseException;
@@ -19,6 +21,7 @@ public class DataHandler {
     }
     private FileHandler fileHandler;
     private ErrorInterface errorInterface;
+    private ThreadInterface threadInterface;
     DataHandler (LogHandler logger) {
         this.logger = logger;
     }
@@ -26,6 +29,7 @@ public class DataHandler {
     public void setErrorInterface(ErrorInterface ei) {
         errorInterface = ei;
     }
+    public void setThreadInterface(ThreadInterface ti) {threadInterface = ti;}
     public void load(Label addr) {
         Thread t = new Thread(() -> {
             try {
@@ -35,12 +39,15 @@ public class DataHandler {
                 fileHandler = new FileHandler(PATH_TO_JSON);
 
                 String link = fileHandler.getLinkFromJSON();
-                String addrHint = link;
+                String addrHint;
                 if (link.length() > 46) {
                     addrHint = "..." + link.substring(link.length() - 46);
+                } else {
+                    addrHint = link;
                 }
-                addr.setText(addrHint);
-
+                Platform.runLater(() -> {
+                    addr.setText(addrHint);
+                });
 
                 URL url = new URL(link);
                 Path destination = Path.of(PATH_TO_TEMP, "temp.xlsx");
@@ -52,10 +59,11 @@ public class DataHandler {
 
                 logger.log("Formatting data");
 
-
-
                 WorkBookHandler wbh = new WorkBookHandler(PATH_TO_TEMP+"temp.xlsx");
                 wbh.extract();
+
+
+                threadInterface.onNotify();
 
             } catch (IOException ioe) {
                 ioe.printStackTrace(); //TODO: Remove later

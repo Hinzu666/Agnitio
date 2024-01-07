@@ -1,7 +1,10 @@
 package com.changenode;
 
+
 import com.changenode.interfaces.ErrorInterface;
 import com.changenode.interfaces.SetupInterface;
+import com.changenode.interfaces.ThreadInterface;
+import com.changenode.mainclasses.MainContainer;
 import javafx.application.Application;
 import javafx.application.Platform;
 import javafx.geometry.Insets;
@@ -20,7 +23,9 @@ import javafx.stage.StageStyle;
 //TODO: logger
 public class Launcher extends Application {
     private static boolean setupCompleted;
+
     public static void main(String[] args) {
+        Launcher.args = args;
         prelaunch();
         launch(args);
     }
@@ -85,7 +90,14 @@ public class Launcher extends Application {
         ltc.start();
 
         DataHandler dh = new DataHandler(logger);
-
+        dh.setThreadInterface(new ThreadInterface() {
+            @Override
+            public void onNotify() {
+                Platform.runLater(() -> {
+                    moveToMain();
+                });
+            }
+        });
         dh.setErrorInterface(new ErrorInterface() {
             @Override
             public void onCatch(Exception exception, int process) {
@@ -95,6 +107,13 @@ public class Launcher extends Application {
 
         dh.load(addr);
 
+    }
+    private static String[] args;
+    private void moveToMain() { //TODO: close everything
+        stage.close();
+        scn = null;
+        stage = null;
+        MainContainer.main(new String[]{}); //TODO: revisit if this is actually a good idea
     }
     private void setup() {
         VBox vb = new VBox();

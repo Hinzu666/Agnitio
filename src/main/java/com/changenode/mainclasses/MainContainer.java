@@ -27,21 +27,18 @@ import java.io.IOException;
 //TODO: resize
 public class MainContainer extends Application {
     public static void main(String[] args) {
-        launch(args);
-    }
-    /*MainContainer(String[] args) {
-        launch(args);
-    }
-     */
-    @Override
-    public void start(Stage stage) throws Exception {
         System.setProperty("prism.lcdtext", "false");
+        Stage stage = new Stage();
         buildContainer(stage);
     }
-    private final boolean[] autoUpdate = {true};
-    private final long refreshRate = 1800000;
-    private double preferredWindowWidth = 1500.d, preferredWindowHeight = 900.d;
-    private void buildContainer(Stage stage) {
+
+    @Override
+    public void start(Stage stage) throws Exception {}
+    private static final boolean[] autoUpdate = {true};
+    private static final long refreshRate = 1800000;
+    private static double preferredWindowWidth = 1500.d;
+    private static double preferredWindowHeight = 900.d;
+    private static void buildContainer(Stage stage) {
         getPreferences();
         AnchorPane pane = new AnchorPane();
         pane.setId("pane");
@@ -132,7 +129,7 @@ public class MainContainer extends Application {
         startAutoUpdateThread();
     }
     private DataPackage data;
-    private void refresh() {
+    private static void refresh() {
 
     }
     private XYChart.Series[] startChart() {
@@ -142,7 +139,7 @@ public class MainContainer extends Application {
         }
         return ret;
     }
-    private void handleAUClick(Label label) {
+    private static void handleAUClick(Label label) {
         if (autoUpdate[0]) {
             autoUpdate[0] = false;
             label.setText("OFF");
@@ -153,7 +150,7 @@ public class MainContainer extends Application {
             label.setId("statusLabelAU_ON");
         }
     }
-    private HBox startCornerUL() {
+    private static HBox startCornerUL() {
         HBox container = new HBox();
 
         //four boxes
@@ -185,7 +182,7 @@ public class MainContainer extends Application {
         return container;
     }
 
-    private void getPreferences() {
+    private static void getPreferences() {
         try {
             FileHandler fh = new FileHandler("src/main/resources/data/userdata.JSON");
             double[] dimensions = fh.getDimensionsFromJSON();
@@ -198,7 +195,7 @@ public class MainContainer extends Application {
         }
     }
 
-    private void startAutoUpdateThread() {
+    private static void startAutoUpdateThread() {
         Thread t = new Thread(() -> {
             try {
                 while (true) {
