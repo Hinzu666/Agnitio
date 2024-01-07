@@ -18,7 +18,16 @@ import javafx.scene.paint.Color;
 public class DatasetWidget  {
 
     private HBox container;
-    private DatasetWidgetListener listener;
+    private DatasetWidgetListener listener = new DatasetWidgetListener() {
+        @Override
+        public void onHide() {
+            System.out.println("Default listener - please initialize [hide]: "+DatasetWidget.this);
+        }
+        @Override
+        public void onShow() {
+            System.out.println("Default listener - please initialize [show]: "+DatasetWidget.this);
+        }
+    };
     private Label box, name;
     private String identifierColorHex;
     DatasetWidget (String identifierColorHex, String identifierName) {
@@ -50,7 +59,7 @@ public class DatasetWidget  {
         container.getChildren().addAll(box, name);
     }
     private boolean enabled = true;
-    private void setListener(DatasetWidgetListener listener) {
+    public void setListener(DatasetWidgetListener listener) {
         this.listener = listener;
     }
     private void addHandler() {

@@ -58,9 +58,15 @@ public class Launcher extends Application {
         subtitle.setId("subtitle");
         subtitle.setPadding(new Insets(-12, 0, 0, 0));
 
-        Label time = new Label("0 s");
-        time.setId("timelab");
-        time.setPadding(new Insets(75, 0, 0, 0));
+        Image i0 = new Image("icons/hourglass_bottom_FILL0_wght400_GRAD0_opsz24.png");
+        Image i1 = new Image("icons/hourglass_top_FILL0_wght400_GRAD0_opsz24.png");
+        ImageView time = new ImageView(i1);
+        time.setPreserveRatio(true);
+        time.setFitWidth(40);
+        HBox timeContainer = new HBox();
+        timeContainer.setAlignment(Pos.CENTER);
+        timeContainer.setPadding(new Insets(95, 0, 0, 0));
+        timeContainer.getChildren().addAll(time);
 
         Label statusBar = new Label("Contacting sharepoint");
         statusBar.setId("status-bar");
@@ -79,15 +85,15 @@ public class Launcher extends Application {
         addr_box.getChildren().addAll(statusBar, addr_title, addr);
         addr_box.setPadding(new Insets(130, 0, 0, 0));
 
-        vb.getChildren().addAll(title, subtitle, time, addr_box);
+        vb.getChildren().addAll(title, subtitle, timeContainer, addr_box);
         scn.setFill(Color.TRANSPARENT);
 
         stage.setTitle("Agnitio");
         stage.setScene(scn);
         stage.show();
 
-        LoadTimeCounter ltc = new LoadTimeCounter(time);
-        ltc.start();
+        LoadTimeCounter ltc = new LoadTimeCounter(time, i0, i1);
+        ltc.start(); //TODO: stop this at moveToMain();
 
         DataHandler dh = new DataHandler(logger);
         dh.setThreadInterface(new ThreadInterface() {

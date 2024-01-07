@@ -2,6 +2,7 @@ package com.changenode.mainclasses;
 
 import com.changenode.DataPackage;
 import com.changenode.FileHandler;
+import com.changenode.interfaces.DatasetWidgetListener;
 import javafx.application.Application;
 import javafx.application.Platform;
 import javafx.event.EventHandler;
