@@ -1,0 +1,27 @@
+.root {
+    -fx-background-color: "#333542";
+    -fx-background-radius: 2.5px;
+}
+#title {
+    -fx-text-fill: #dadada;
+    -fx-font-family: "Arial";
+    -fx-font-size: 18px;
+}
+#resetlab {
+    -fx-text-fill: #dadada;
+    -fx-font-family: "Arial Narrow";
+    -fx-font-size: 18px;
+}
+#resetcont {
+    -fx-background-color: "#D22D4A";
+    -fx-background-radius: 2.5px;
+}
+#exitbcont {
+    -fx-background-color: "#444651";
+    -fx-background-radius: 2.5px;
+
+}
+#exitbcont:hover {
+    -fx-background-color: "#D22D4A";
+    -fx-background-radius: 2.5px;
+}

@@ -36,10 +36,17 @@ public class DataHandler {
                 String PATH_TO_JSON = "src/main/resources/data/userdata.JSON";
                 String PATH_TO_TEMP = "src/main/resources/data/";
 
+                logger.log("Initializing FH");
+
                 fileHandler = new FileHandler(PATH_TO_JSON);
 
-                String link = fileHandler.getLinkFromJSON();
+                logger.log("Retrieving JSON-data");
+
+                String link = fileHandler.getLinkFromJSON(logger);
                 String addrHint;
+
+                logger.log("Updating hint");
+
                 if (link.length() > 46) {
                     addrHint = "..." + link.substring(link.length() - 46);
                 } else {
@@ -49,8 +56,12 @@ public class DataHandler {
                     addr.setText(addrHint);
                 });
 
+                logger.log("Opening URL connection");
+
                 URL url = new URL(link);
                 Path destination = Path.of(PATH_TO_TEMP, "temp.xlsx");
+
+                logger.log("Creating directories");
 
                 Files.createDirectories(destination.getParent());
 

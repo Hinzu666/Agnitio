@@ -1,8 +1,10 @@
 package com.changenode.mainclasses;
 
 import com.changenode.DataPackage;
+import com.changenode.DrawerWidget;
 import com.changenode.FileHandler;
 import com.changenode.interfaces.DatasetWidgetListener;
+import com.changenode.interfaces.DrawerInterface;
 import javafx.application.Application;
 import javafx.application.Platform;
 import javafx.event.EventHandler;
@@ -29,7 +31,7 @@ import java.io.IOException;
 public class MainContainer extends Application {
     public static void main(String[] args) {
         System.setProperty("prism.lcdtext", "false");
-        Stage stage = new Stage();
+        stage = new Stage();
         buildContainer(stage);
     }
 
@@ -41,6 +43,7 @@ public class MainContainer extends Application {
     private static double preferredWindowHeight = 900.d;
     private static void buildContainer(Stage stage) {
         getPreferences();
+
         AnchorPane pane = new AnchorPane();
         pane.setId("pane");
         Scene scene = new Scene(pane, preferredWindowWidth, preferredWindowHeight);
@@ -125,13 +128,23 @@ public class MainContainer extends Application {
         AnchorPane.setRightAnchor(lineChart, 15.0);
 
         pane.getChildren().addAll(cornerUL, ivLogo, containerRB, lineChart);
+        setOnClose();
         stage.show();
 
+        /* -----------------------------------------------*/
+
         startAutoUpdateThread();
+
+        /* -----------------------------------------------*/
     }
     private DataPackage data;
     private static void refresh() {
-
+        //TODO: this
+    }
+    private static void setOnClose() {
+        Runtime.getRuntime().addShutdownHook(new Thread(() -> {
+            //TODO: save prefs
+        }));
     }
     private XYChart.Series[] startChart() {
         XYChart.Series[] ret = new XYChart.Series[data.size];
@@ -151,36 +164,85 @@ public class MainContainer extends Application {
             label.setId("statusLabelAU_ON");
         }
     }
+    private static Stage stage;
     private static HBox startCornerUL() {
         HBox container = new HBox();
 
         //four boxes
         int s = 7;
         GridPane gp = new GridPane();
+        Label[] sqrs = new Label[4];
+        int n = 0;
         for (int row = 0; row <= 1; row++) {
             for (int col = 0; col <= 1; col++) {
                 Label label = new Label("");
                 label.setId("whitebox");
+
+                sqrs[n] = label;
 
                 label.setMinSize(s, s);
                 label.setMaxSize(s, s);
                 GridPane.setRowIndex(label, row);
                 GridPane.setColumnIndex(label, col);
                 gp.getChildren().add(label);
+                n++;
             }
         }
         gp.setHgap(5);
         gp.setVgap(5);
         gp.setMaxHeight(s*2 + 5);
         gp.setPadding(new Insets(0, 20, 0, 0));
+        gp.setId("drawerbutton");
 
-        //TODO: handle button press gp
+        gp.setOnMouseClicked(new EventHandler<MouseEvent>() {
+            @Override
+            public void handle(MouseEvent event) {
+                openDrawer(gp);
+            }
+        });
+        gp.setOnMouseEntered(new EventHandler<MouseEvent>() {
+            @Override
+            public void handle(MouseEvent event) {
+                for (Label sq : sqrs) {
+                    Platform.runLater(() -> {
+                        sq.setId("whiteboxhover");
+                    });
+                }
+            }
+        });
+        gp.setOnMouseExited(new EventHandler<MouseEvent>() {
+            @Override
+            public void handle(MouseEvent event) {
+                for (Label sq : sqrs) {
+                    Platform.runLater(() -> {
+                        sq.setId("whitebox");
+                    });
+                }
+            }
+        });
 
         DatasetWidget dw = new DatasetWidget("#75D49C", "Dataset 1"); //TODO: actually generate right amount
         DatasetWidget dw1 = new DatasetWidget("#757ED4", "Dataset 2");
 
         container.getChildren().addAll(gp, dw.getNode(), dw1.getNode());
         return container;
+    }
+
+    private static void openDrawer(GridPane gp) {
+        DrawerWidget dw = new DrawerWidget(gp.localToScreen(0, 0).getX(), gp.localToScreen(0, 0).getY(), new DrawerInterface() {
+            @Override
+            public void onExitRequested() {
+                stage.close();
+                active = false;
+                System.exit(0);
+            }
+
+            @Override
+            public void onResetAll() {
+
+            }
+        });
+
     }
 
     private static void getPreferences() {
@@ -195,15 +257,14 @@ public class MainContainer extends Application {
             pe.printStackTrace(); //TODO: handle
         }
     }
-
+    private static boolean active = true;
     private static void startAutoUpdateThread() {
         Thread t = new Thread(() -> {
             try {
-                while (true) {
+                while (active) {
                     Thread.sleep(refreshRate);
                     if (autoUpdate[0]) {
                         refresh();
-
                     }
                 }
             } catch (Exception e) {
@@ -214,4 +275,3 @@ public class MainContainer extends Application {
     }
 
 }
-//TODO: save preferences on exit

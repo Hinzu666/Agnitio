@@ -9,6 +9,10 @@
     -fx-background-color: #dadada;
     -fx-background-radius: 1px;
 }
+#whiteboxhover {
+    -fx-background-color: #75D49C;
+    -fx-background-radius: 1px;
+}
 #datasetwidgetcontainer {
     -fx-background-color: #dadada0f;
     -fx-background-radius: 2.5px;

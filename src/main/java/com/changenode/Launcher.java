@@ -10,6 +10,7 @@ import javafx.application.Platform;
 import javafx.geometry.Insets;
 import javafx.geometry.Pos;
 import javafx.scene.Scene;
+import javafx.scene.control.Alert;
 import javafx.scene.control.Button;
 import javafx.scene.control.Label;
 import javafx.scene.control.TextField;
@@ -19,6 +20,9 @@ import javafx.scene.layout.*;
 import javafx.scene.paint.Color;
 import javafx.stage.Stage;
 import javafx.stage.StageStyle;
+import org.junit.internal.runners.ErrorReportingRunner;
+
+import java.util.Arrays;
 
 //TODO: logger
 public class Launcher extends Application {
@@ -35,6 +39,11 @@ public class Launcher extends Application {
              setupCompleted = plh.notMyFirstTimeAroundHere();
         } catch (Exception e) {
             //TODO: handle
+            //https://striimus-my.sharepoint.com/personal/eeli_striimus_fi/_layouts/15/download.aspx?e=qDZTJU&share=ERwLbX77HUJDh2fvoOUP8g8B1a4t03PKJuNJ8v2egH2T7w
+            Platform.runLater(() -> {
+                Alert alert = new Alert(Alert.AlertType.ERROR, "Error\n"+e+"\n"+e.getCause()+"\n"+e.getLocalizedMessage() + "\n" + Arrays.toString(e.getStackTrace()));
+                alert.showAndWait();
+            }); //TODO: clean
             e.printStackTrace();
         }
     }
@@ -108,6 +117,11 @@ public class Launcher extends Application {
             @Override
             public void onCatch(Exception exception, int process) {
                 //TODO: handle
+                Platform.runLater(() -> {
+                    Alert alert = new Alert(Alert.AlertType.ERROR, "Error\n"+exception.toString()+"\nprocess: "+process);
+                    alert.showAndWait();
+                });
+
             }
         });
 

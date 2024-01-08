@@ -48,6 +48,11 @@ public class PreLaunchHandler {
     }
     private boolean checkFileAvailibility() throws IOException {
         file = new File(PATH);
+        File parent = file.getParentFile();
+        if (!parent.exists()) { //TODO: check this, added in haste
+            parent.mkdirs();
+        }
+
         if (!file.exists()) {
             boolean res = file.createNewFile();
             System.out.println("PRELAUNCH: I haven't been here before - create result: ["+res+"]");
