@@ -12,6 +12,7 @@ import javafx.scene.image.ImageView;
 import javafx.scene.input.MouseEvent;
 import javafx.scene.layout.AnchorPane;
 import javafx.scene.layout.HBox;
+import javafx.scene.layout.Priority;
 import javafx.scene.layout.VBox;
 import javafx.scene.paint.Color;
 import javafx.stage.Stage;
@@ -137,10 +138,18 @@ public class DrawerWidget {
     private VBox buildContent() {
         VBox cont = new VBox();
 
+        DropShadow dropShadow = new DropShadow();
+        dropShadow.setColor(Color.valueOf("#00000022"));
+        dropShadow.setRadius(2);
+        dropShadow.setOffsetX(-1);
+        dropShadow.setOffsetY(2);
+
         HBox row0 = new HBox();
         AnchorPane autoRefreshCont = new AnchorPane();
+        autoRefreshCont.setEffect(dropShadow);
         autoRefreshCont.setId("arcont");
         Label autRefreshLab = new Label("Auto refresh");
+        autRefreshLab.setMinWidth(100);
         autRefreshLab.setId("arl");
         Label autRefreshLabState = new Label();
         if (arStat) {
@@ -150,7 +159,6 @@ public class DrawerWidget {
             autRefreshLabState.setId("arls_OFF");
             autRefreshLabState.setText("OFF");
         }
-
 
         AnchorPane.setLeftAnchor(autRefreshLab, 3.0);
         AnchorPane.setTopAnchor(autRefreshLab, 0.0);
@@ -181,8 +189,10 @@ public class DrawerWidget {
         });
 
         AnchorPane manualRefreshCont = new AnchorPane();
+        manualRefreshCont.setEffect(dropShadow);
         manualRefreshCont.setId("arcont"); //same as in auto refresh
         Label refreshLab = new Label("Manual refresh");
+        refreshLab.setMinWidth(100);
         refreshLab.setId("arl"); // same as in auto refresh
         Image rfrshim = new Image("icons/sync_FILL0_wght400_GRAD0_opsz24.png");
         ImageView rfrshimv = new ImageView(rfrshim);
@@ -205,7 +215,31 @@ public class DrawerWidget {
         row0.setSpacing(6);
         row0.getChildren().addAll(autoRefreshCont, manualRefreshCont);
 
-        cont.getChildren().addAll(row0);
+        HBox row1 = new HBox();
+        row1.setSpacing(6);
+        AnchorPane arrcont = new AnchorPane();
+        arrcont.setEffect(dropShadow);
+        arrcont.setId("arcont"); //sames as in auto refresh
+        Label arrlab = new Label("Auto refresh interval");
+        arrlab.setId("arl"); //same as in auto refresh
+        arrlab.setWrapText(true);
+        Label arrlabinfo = new Label("1 h");
+        arrlabinfo.setId("arls_ON");
+
+        AnchorPane.setLeftAnchor(arrlab, 3.0);
+        AnchorPane.setTopAnchor(arrlab, 0.0);
+        AnchorPane.setBottomAnchor(arrlab, 0.0);
+
+        AnchorPane.setRightAnchor(arrlabinfo, 3.0);
+        AnchorPane.setTopAnchor(arrlabinfo, 0.0);
+        AnchorPane.setBottomAnchor(arrlabinfo, 0.0);
+
+        arrcont.getChildren().addAll(arrlab, arrlabinfo);
+        HBox.setHgrow(arrcont, Priority.ALWAYS);
+        row1.getChildren().addAll(arrcont);
+
+        cont.setSpacing(6);
+        cont.getChildren().addAll(row0, row1);
         return cont;
     }
     private boolean confirmReset() {
