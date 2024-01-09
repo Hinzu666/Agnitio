@@ -26,22 +26,6 @@ public class PreLaunchHandler {
         return true;
     }
 
-    public boolean validLink() {
-        if (!json.containsKey("SavedLink")) {
-            return false;
-        }
-
-        String link = (String) json.get("SavedLink");
-
-        //TODO: actually something here
-
-        return false;
-    }
-    public boolean validLink(String link) {
-        //TODO: actually something here
-        return false;
-    }
-
     private JSONObject getJSON() throws IOException, ParseException {
         JSONParser parser = new JSONParser();
         return (JSONObject) parser.parse(new FileReader(PATH));

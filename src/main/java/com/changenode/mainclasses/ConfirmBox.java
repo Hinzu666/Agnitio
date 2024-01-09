@@ -23,7 +23,6 @@ import javafx.stage.Stage;
 import javafx.stage.StageStyle;
 
 public class ConfirmBox {
-    //TODO: this
     public ConfirmBox(DrawerInterface drawerInterface) {
         Stage stage = new Stage();
         stage.initModality(Modality.APPLICATION_MODAL);

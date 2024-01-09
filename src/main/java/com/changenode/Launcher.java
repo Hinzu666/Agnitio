@@ -23,8 +23,6 @@ import javafx.stage.StageStyle;
 import org.junit.internal.runners.ErrorReportingRunner;
 
 import java.util.Arrays;
-
-//TODO: logger
 public class Launcher extends Application {
     private static boolean setupCompleted;
 
@@ -38,18 +36,17 @@ public class Launcher extends Application {
         try {
              setupCompleted = plh.notMyFirstTimeAroundHere();
         } catch (Exception e) {
-            //TODO: handle
-            //https://striimus-my.sharepoint.com/personal/eeli_striimus_fi/_layouts/15/download.aspx?e=qDZTJU&share=ERwLbX77HUJDh2fvoOUP8g8B1a4t03PKJuNJ8v2egH2T7w
             Platform.runLater(() -> {
                 Alert alert = new Alert(Alert.AlertType.ERROR, "Error\n"+e+"\n"+e.getCause()+"\n"+e.getLocalizedMessage() + "\n" + Arrays.toString(e.getStackTrace()));
                 alert.showAndWait();
-            }); //TODO: clean
+            }); //TODO: added in haste
             e.printStackTrace();
         }
     }
     private Stage stage;
     private LogHandler logger;
     private Scene scn;
+    private LoadTimeCounter ltc;
 
     private void load() {
         VBox vb = new VBox();
@@ -101,8 +98,8 @@ public class Launcher extends Application {
         stage.setScene(scn);
         stage.show();
 
-        LoadTimeCounter ltc = new LoadTimeCounter(time, i0, i1);
-        ltc.start(); //TODO: stop this at moveToMain();
+        ltc = new LoadTimeCounter(time, i0, i1);
+        ltc.start();
 
         DataHandler dh = new DataHandler(logger);
         dh.setThreadInterface(new ThreadInterface() {
@@ -131,6 +128,7 @@ public class Launcher extends Application {
     private static String[] args;
     private void moveToMain() { //TODO: close everything
         stage.close();
+        ltc.requestStop();
         scn = null;
         stage = null;
         MainContainer.main(new String[]{}); //TODO: revisit if this is actually a good idea

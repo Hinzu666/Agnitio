@@ -140,11 +140,17 @@ public class MainContainer extends Application {
     private DataPackage data;
     private static Stage stage;
     private static void refresh() {
-        //TODO: this
+        //TODO: reload data
     }
     private static void setOnClose() {
         Runtime.getRuntime().addShutdownHook(new Thread(() -> {
-            //TODO: save prefs
+            try {
+                fh.saveDimensionsToJSON(stage.getWidth(), stage.getHeight());
+            } catch (IOException e) {
+                e.printStackTrace();
+            } catch (ParseException e) {
+                e.printStackTrace(); //handle, not critical
+            }
         }));
     }
     private XYChart.Series[] startChart() {
@@ -259,9 +265,10 @@ public class MainContainer extends Application {
         });
 
     }
+    private static FileHandler fh;
     private static void getPreferences() {
         try {
-            FileHandler fh = new FileHandler("src/main/resources/data/userdata.JSON");
+            fh = new FileHandler("src/main/resources/data/userdata.JSON");
             double[] dimensions = fh.getDimensionsFromJSON();
             preferredWindowWidth = dimensions[0];
             preferredWindowHeight = dimensions[1];

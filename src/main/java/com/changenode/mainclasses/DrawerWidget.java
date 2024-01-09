@@ -19,8 +19,6 @@ import javafx.stage.Stage;
 import javafx.stage.StageStyle;
 
 import java.io.StringReader;
-
-//TODO: make sure only one drawer open, add shutdown hook
 public class DrawerWidget {
     private DrawerInterface drawerInterface;
     public DrawerWidget(Stage root, double x, double y, boolean autoRefreshState, DrawerInterface drawerInterface) {
@@ -235,6 +233,7 @@ public class DrawerWidget {
         AnchorPane.setBottomAnchor(arrlabinfo, 0.0);
 
         arrcont.getChildren().addAll(arrlab, arrlabinfo);
+
         HBox.setHgrow(arrcont, Priority.ALWAYS);
         row1.getChildren().addAll(arrcont);
 

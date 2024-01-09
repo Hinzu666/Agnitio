@@ -82,11 +82,10 @@ public class SetupHandler {
             }
 
             logger.log("URL accepted - saving");
-            //TODO: check if url actually excel file if possible
 
             FileHandler fh = new FileHandler("src/main/resources/data/userdata.JSON");
-            int response = fh.saveLinkToJSON(data);
-            if (response >= 400) {
+            Exception response = fh.saveLinkToJSON(data);
+            if (response != null) {
                 logger.log("Error saving data - exit code: "+response);
             } else {
                 logger.log("Success!");

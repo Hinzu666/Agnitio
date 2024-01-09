@@ -20,7 +20,7 @@ public class FileHandler {
         file = new File(filePath);
 
     }
-    public int saveLinkToJSON(String link) {
+    public Exception saveLinkToJSON(String link) {
         Exception res = checkFileExists();
 
         JSONObject json;
@@ -28,7 +28,7 @@ public class FileHandler {
             json = getJSON();
         } catch (Exception e) {
             e.printStackTrace();
-            return 402;
+            return e;
         }
 
         json.put("SavedLink", link);
@@ -40,10 +40,10 @@ public class FileHandler {
             fw.close();
         } catch (IOException e) {
             e.printStackTrace();
-            return 403;
+            return e;
         }
 
-        return 200;
+        return null;
     }
 
     public String getLinkFromJSON(LogHandler logger) throws IOException, ParseException{
@@ -62,7 +62,7 @@ public class FileHandler {
         if (json.containsKey("SavedLink")) {
             return (String)json.get("SavedLink");
         }
-        return "404"; //TODO: make sure this value is checked for
+        return "404";
     }
     public double[] getDimensionsFromJSON() throws IOException, ParseException {
         checkFileExists();
@@ -80,13 +80,19 @@ public class FileHandler {
 
         return ret;
     }
+    public void saveDimensionsToJSON(double width, double height) throws IOException, ParseException {
+        checkFileExists();
 
-    //404: no value
-    //403: couldn't write to file
-    //402: JSON parser error
-    //401: couldn't create file
-    //201: new file created
-    //202: file exists
+        JSONObject json = getJSON();
+        json.put("preferredWidth", width);
+        json.put("preferredHeight", height);
+
+        FileWriter fw = new FileWriter(file);
+        fw.write(json.toJSONString());
+        fw.flush();
+        fw.close();
+    }
+
     private JSONObject getJSON() throws IOException, ParseException {
         JSONParser parser = new JSONParser();
         return (JSONObject) parser.parse(new FileReader(file));

@@ -18,6 +18,7 @@ public class DataHandler {
     private LogHandler logger;
     public static class Process {
         public static int LOAD = 10001;
+        public static int GET_LINK_FROM_JSON = 10002;
     }
     private FileHandler fileHandler;
     private ErrorInterface errorInterface;
@@ -43,6 +44,9 @@ public class DataHandler {
                 logger.log("Retrieving JSON-data");
 
                 String link = fileHandler.getLinkFromJSON(logger);
+                if (link.equals("404")) {
+                    errorInterface.onCatch(new IOException("getLinkFromJSON() reported: 404"),Process.GET_LINK_FROM_JSON);
+                }
                 String addrHint;
 
                 logger.log("Updating hint");
