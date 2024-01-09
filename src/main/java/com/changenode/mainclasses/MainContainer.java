@@ -1,16 +1,13 @@
 package com.changenode.mainclasses;
 
 import com.changenode.DataPackage;
-import com.changenode.DrawerWidget;
 import com.changenode.FileHandler;
-import com.changenode.interfaces.DatasetWidgetListener;
 import com.changenode.interfaces.DrawerInterface;
 import javafx.application.Application;
 import javafx.application.Platform;
 import javafx.event.EventHandler;
 import javafx.geometry.Insets;
 import javafx.geometry.Pos;
-import javafx.scene.Node;
 import javafx.scene.Scene;
 import javafx.scene.chart.LineChart;
 import javafx.scene.chart.NumberAxis;
@@ -23,7 +20,6 @@ import javafx.scene.layout.*;
 import javafx.scene.paint.Color;
 import javafx.stage.Stage;
 import javafx.stage.StageStyle;
-import org.apache.poi.ss.formula.functions.T;
 import org.json.simple.parser.ParseException;
 
 import java.io.IOException;
@@ -41,10 +37,14 @@ public class MainContainer extends Application {
     private static final long refreshRate = 1800000;
     private static double preferredWindowWidth = 1500.d;
     private static double preferredWindowHeight = 900.d;
+    private static Label statusLabelAU;
+    private static boolean drawerOpen = false;
+    private static AnchorPane pane;
     private static void buildContainer(Stage stage) {
         getPreferences();
 
-        AnchorPane pane = new AnchorPane();
+        pane = new AnchorPane();
+
         pane.setId("pane");
         Scene scene = new Scene(pane, preferredWindowWidth, preferredWindowHeight);
         stage.initStyle(StageStyle.TRANSPARENT);
@@ -52,7 +52,7 @@ public class MainContainer extends Application {
         scene.getStylesheets().add(MainContainer.class.getResource("/main_style.css").toExternalForm());
         scene.setFill(Color.TRANSPARENT);
 
-        HBox cornerUL = startCornerUL();
+        HBox cornerUL = buildCornerUL();
         cornerUL.setAlignment(Pos.CENTER_LEFT);
         cornerUL.setSpacing(12);
         AnchorPane.setTopAnchor(cornerUL, 15.0);
@@ -77,14 +77,14 @@ public class MainContainer extends Application {
         Label staticLabelAU = new Label("Auto update: ");
         staticLabelAU.setId("autoupdatelab");
 
-        Label statusLabelAU = new Label("ON");
+        statusLabelAU = new Label("ON");
         statusLabelAU.setId("statusLabelAU_ON");
 
         autoUpdateContainer.getChildren().addAll(staticLabelAU, statusLabelAU);
         autoUpdateContainer.setOnMouseClicked(new EventHandler<MouseEvent>() {
             @Override
             public void handle(MouseEvent event) {
-                handleAUClick(statusLabelAU);
+                handleAUClick();
             }
         });
 
@@ -138,6 +138,7 @@ public class MainContainer extends Application {
         /* -----------------------------------------------*/
     }
     private DataPackage data;
+    private static Stage stage;
     private static void refresh() {
         //TODO: this
     }
@@ -153,7 +154,8 @@ public class MainContainer extends Application {
         }
         return ret;
     }
-    private static void handleAUClick(Label label) {
+    private static void handleAUClick() {
+        Label label = statusLabelAU;
         if (autoUpdate[0]) {
             autoUpdate[0] = false;
             label.setText("OFF");
@@ -164,8 +166,7 @@ public class MainContainer extends Application {
             label.setId("statusLabelAU_ON");
         }
     }
-    private static Stage stage;
-    private static HBox startCornerUL() {
+    private static HBox buildCornerUL() {
         HBox container = new HBox();
 
         //four boxes
@@ -197,7 +198,12 @@ public class MainContainer extends Application {
         gp.setOnMouseClicked(new EventHandler<MouseEvent>() {
             @Override
             public void handle(MouseEvent event) {
-                openDrawer(gp);
+                if (drawerOpen) {
+                    drawerOpen = false;
+                } else {
+                    openDrawer(gp);
+                    drawerOpen = true;
+                }
             }
         });
         gp.setOnMouseEntered(new EventHandler<MouseEvent>() {
@@ -227,9 +233,8 @@ public class MainContainer extends Application {
         container.getChildren().addAll(gp, dw.getNode(), dw1.getNode());
         return container;
     }
-
     private static void openDrawer(GridPane gp) {
-        DrawerWidget dw = new DrawerWidget(gp.localToScreen(0, 0).getX(), gp.localToScreen(0, 0).getY(), new DrawerInterface() {
+        DrawerWidget drawerWidget = new DrawerWidget(stage, gp.localToScreen(0, 0).getX(), gp.localToScreen(0, 0).getY(), autoUpdate[0], new DrawerInterface() {
             @Override
             public void onExitRequested() {
                 stage.close();
@@ -241,10 +246,19 @@ public class MainContainer extends Application {
             public void onResetAll() {
 
             }
+
+            @Override
+            public void onChangeARState(boolean state) {
+                handleAUClick();
+            }
+
+            @Override
+            public void onDrawerClose() {
+                drawerOpen = false;
+            }
         });
 
     }
-
     private static void getPreferences() {
         try {
             FileHandler fh = new FileHandler("src/main/resources/data/userdata.JSON");

@@ -1,12 +1,15 @@
-package com.changenode;
+package com.changenode.mainclasses;
 
+import com.changenode.interfaces.DrawerInterface;
 import com.changenode.mainclasses.MainContainer;
+import javafx.event.EventHandler;
 import javafx.geometry.Pos;
 import javafx.scene.Scene;
 import javafx.scene.control.Label;
 import javafx.scene.control.TextArea;
 import javafx.scene.image.Image;
 import javafx.scene.image.ImageView;
+import javafx.scene.input.MouseEvent;
 import javafx.scene.layout.*;
 import javafx.scene.paint.Color;
 import javafx.scene.paint.CycleMethod;
@@ -15,13 +18,15 @@ import javafx.scene.paint.Stop;
 import javafx.scene.text.Font;
 import javafx.scene.text.Text;
 import javafx.scene.text.TextAlignment;
+import javafx.stage.Modality;
 import javafx.stage.Stage;
 import javafx.stage.StageStyle;
 
 public class ConfirmBox {
     //TODO: this
-    public ConfirmBox() {
+    public ConfirmBox(DrawerInterface drawerInterface) {
         Stage stage = new Stage();
+        stage.initModality(Modality.APPLICATION_MODAL);
         AnchorPane ap = new AnchorPane();
         Scene scene = new Scene(ap, 630, 400);
         scene.getStylesheets().add(MainContainer.class.getResource("/confirm_style.css").toExternalForm());
@@ -69,11 +74,24 @@ public class ConfirmBox {
         cancelb.setAlignment(Pos.CENTER);
         cancelb.setId("cancelb");
         cancelb.setMinWidth(150);
+        cancelb.setOnMouseClicked(new EventHandler<MouseEvent>() {
+            @Override
+            public void handle(MouseEvent event) {
+                stage.close();
+            }
+        });
 
         Label continueb = new Label("Continue");
         continueb.setAlignment(Pos.CENTER);
         continueb.setId("continueb");
         continueb.setMinWidth(150);
+        continueb.setOnMouseClicked(new EventHandler<MouseEvent>() {
+            @Override
+            public void handle(MouseEvent event) {
+                drawerInterface.onResetAll();
+                stage.close();
+            }
+        });
 
         midcont.getChildren().addAll(cancelb, iv, continueb);
 

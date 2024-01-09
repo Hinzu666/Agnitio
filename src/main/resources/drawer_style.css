@@ -25,3 +25,26 @@
     -fx-background-color: "#D22D4A";
     -fx-background-radius: 2.5px;
 }
+#arcont {
+    -fx-background-color: "#dadada1a";
+    -fx-background-radius: 2.5px;
+    -fx-padding: 8, 0, 8, 0;
+}
+#arcont:hover {
+    -fx-background-color: "#1D1E2555";
+}
+#arl {
+    -fx-text-fill: #dadada;
+    -fx-font-family: "Arial Narrow";
+    -fx-font-size: 14px;
+}
+#arls_ON {
+    -fx-text-fill: #75D49C;
+    -fx-font-family: "Arial Narrow";
+    -fx-font-size: 14px;
+}
+#arls_OFF {
+    -fx-text-fill: #D22D4A;
+    -fx-font-family: "Arial Narrow";
+    -fx-font-size: 14px;
+}
