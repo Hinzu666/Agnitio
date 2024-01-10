@@ -14,7 +14,7 @@
     -fx-background-radius: 1px;
 }
 #datasetwidgetcontainer {
-    -fx-background-color: #dadada0f;
+    -fx-background-color: #303137;
     -fx-background-radius: 2.5px;
     -fx-padding: -1 20 -1 14;
     -fx-border-color: #dadada00;
@@ -65,7 +65,7 @@
     -fx-font-size: 12px;
 }
 #aucontainer {
-    -fx-background-color: #DADADA1A;
+    -fx-background-color: #303137;
     -fx-background-radius: 2.5px;
     -fx-padding: 2 10 2 10;
     -fx-border-color: #dadada00;

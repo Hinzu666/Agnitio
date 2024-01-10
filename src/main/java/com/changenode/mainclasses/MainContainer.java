@@ -14,6 +14,7 @@ import javafx.scene.chart.LineChart;
 import javafx.scene.chart.NumberAxis;
 import javafx.scene.chart.XYChart;
 import javafx.scene.control.Label;
+import javafx.scene.effect.DropShadow;
 import javafx.scene.image.Image;
 import javafx.scene.image.ImageView;
 
@@ -41,10 +42,17 @@ public class MainContainer extends Application {
     private static Label statusLabelAU;
     private static boolean drawerOpen = false;
     private static final double[] originalPosition = new double[2];
+    public static DropShadow dropShadow;
     private static void buildContainer(Stage stage) {
         getPreferences();
 
         AnchorPane pane = new AnchorPane();
+
+        dropShadow = new DropShadow();
+        dropShadow.setColor(Color.valueOf("#00000022"));
+        dropShadow.setRadius(2);
+        dropShadow.setOffsetX(-1);
+        dropShadow.setOffsetY(2);
 
         pane.setId("pane");
         Scene scene = new Scene(pane, preferredWindowWidth, preferredWindowHeight);
@@ -72,6 +80,7 @@ public class MainContainer extends Application {
         containerRB.setSpacing(12);
 
         HBox autoUpdateContainer = new HBox();
+        autoUpdateContainer.setEffect(dropShadow);
         autoUpdateContainer.setSpacing(8);
         autoUpdateContainer.setAlignment(Pos.CENTER);
         autoUpdateContainer.setId("aucontainer");
@@ -188,6 +197,8 @@ public class MainContainer extends Application {
             for (int col = 0; col <= 1; col++) {
                 Label label = new Label("");
                 label.setId("whitebox");
+
+                label.setEffect(dropShadow);
 
                 sqrs[n] = label;
 

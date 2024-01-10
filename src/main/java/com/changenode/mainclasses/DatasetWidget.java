@@ -33,7 +33,7 @@ public class DatasetWidget  {
         dropShadow.setRadius(2);
         dropShadow.setOffsetX(-1);
         dropShadow.setOffsetY(2);
-        dropShadow.setColor(Color.valueOf("#000000"));
+        dropShadow.setColor(Color.valueOf("#00000022"));
 
         container.setEffect(dropShadow);
 

@@ -40,7 +40,6 @@ public class DrawerWidget {
 
         stage.focusedProperty().addListener((obs, oldVal, newVal) -> {
             if (!newVal) {
-                System.out.println("close");
                 stage.close();  // or primaryStage.hide();
                 drawerInterface.onDrawerClose();
             }
@@ -49,7 +48,7 @@ public class DrawerWidget {
         stage.initOwner(root);
 
         AnchorPane ap = new AnchorPane();
-        Scene scne = new Scene(ap, 300, 480);
+        Scene scne = new Scene(ap, 300, 260);
         scne.getStylesheets().add(MainContainer.class.getResource("/drawer_style.css").toExternalForm());
         stage.initStyle(StageStyle.TRANSPARENT);
 

@@ -1,6 +1,9 @@
 .root {
-    -fx-background-color: "#333542";
+    -fx-background-color: "#2E2F35";
     -fx-background-radius: 2.5px;
+    -fx-border-width: .5px;
+    -fx-border-color: #dadada;
+    -fx-border-radius: 2.5px;
 }
 #title {
     -fx-text-fill: #dadada;
@@ -26,7 +29,7 @@
     -fx-background-radius: 2.5px;
 }
 #arcont {
-    -fx-background-color: "#444651";
+    -fx-background-color: "#3F4045";
     -fx-background-radius: 2.5px;
     -fx-padding: 8, 0, 8, 0;
 }
