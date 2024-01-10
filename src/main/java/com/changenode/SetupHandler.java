@@ -8,8 +8,10 @@ import javafx.scene.control.TextField;
 import javafx.scene.image.Image;
 import javafx.scene.image.ImageView;
 import javafx.scene.input.MouseEvent;
+import org.json.simple.parser.ParseException;
 import org.w3c.dom.Text;
 
+import java.io.IOException;
 import java.net.MalformedURLException;
 import java.net.URISyntaxException;
 import java.net.URL;
@@ -18,10 +20,10 @@ import java.util.Set;
 public class SetupHandler {
 
     private SetupInterface onsetupcompletedh;
-    private LogHandler logger;
+    private final LogHandler logger;
     private String inputData;
-    private TextField tf;
-    private Button btn;
+    private final TextField tf;
+    private final Button btn;
 
     void addOnComplete(SetupInterface inter) {
         onsetupcompletedh = inter;
@@ -32,7 +34,7 @@ public class SetupHandler {
         this.tf = tf;
         btn = confb;
         this.originalView = originalView;
-        warnView = new ImageView(new Image("icons/warning_FILL0_wght400_GRAD0_opsz24.png"));
+        ImageView warnView = new ImageView(new Image("icons/warning_FILL0_wght400_GRAD0_opsz24.png"));
         warnView.setFitHeight(22);
         warnView.setFitWidth(22);
 
@@ -84,11 +86,10 @@ public class SetupHandler {
             logger.log("URL accepted - saving");
 
             FileHandler fh = new FileHandler("src/main/resources/data/userdata.JSON");
-            Exception response = fh.saveLinkToJSON(data);
-            if (response != null) {
-                logger.log("Error saving data - exit code: "+response);
-            } else {
-                logger.log("Success!");
+            try {
+                fh.saveLinkToJSON(data);
+            } catch (IOException | ParseException ioe) {
+                ErrorHandler.handle(ioe, ErrorHandler.Severity.CRITICAL);
             }
 
             bla.requestStopAndLoad(doneView);
@@ -106,7 +107,6 @@ public class SetupHandler {
             new URL(link).toURI();
             return true;
         } catch (MalformedURLException | URISyntaxException e) {
-            e.printStackTrace();
             return false;
         }
     }
@@ -124,35 +124,13 @@ public class SetupHandler {
                     });
                     Thread.sleep(100);
                 } catch (Exception e) {
-                    e.printStackTrace(); //No need to handle, not important
+                    ErrorHandler.handle(e, ErrorHandler.Severity.IGNORE);
                 }
             }
         });
         t.start();
     }
 
-    private ImageView originalView, warnView, doneView;
-    private void notifyWarn() {
-        Thread t = new Thread(() -> {
-            for (int n = 0; n < 5; n++) {
-                try {
-                    Platform.runLater(() -> {
-                        btn.setGraphic(warnView);
-                    });
-
-                    Thread.sleep(200);
-
-                    Platform.runLater(() -> {
-                        btn.setGraphic(originalView);
-                    });
-
-                    Thread.sleep(200);
-                } catch (Exception e) {
-                    e.printStackTrace(); //No need to handle, not important
-                }
-            }
-        });
-        t.start();
-    }
-
+    private final ImageView originalView;
+    private final ImageView doneView;
 }

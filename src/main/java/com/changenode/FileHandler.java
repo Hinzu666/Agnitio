@@ -14,47 +14,28 @@ import java.util.logging.Logger;
 
 public class FileHandler {
 
-    private File file;
+    private final File file;
     private String PATH;
     public FileHandler (String filePath) {
         file = new File(filePath);
-
     }
-    public Exception saveLinkToJSON(String link) {
-        Exception res = checkFileExists();
+    public void saveLinkToJSON(String link) throws IOException, ParseException {
+        checkFileExists();
 
         JSONObject json;
-        try {
-            json = getJSON();
-        } catch (Exception e) {
-            e.printStackTrace();
-            return e;
-        }
+        json = getJSON();
 
         json.put("SavedLink", link);
 
-        try {
-            FileWriter fw = new FileWriter(file);
-            fw.write(json.toJSONString());
-            fw.flush();
-            fw.close();
-        } catch (IOException e) {
-            e.printStackTrace();
-            return e;
-        }
-
-        return null;
+        FileWriter fw = new FileWriter(file);
+        fw.write(json.toJSONString());
+        fw.flush();
+        fw.close();
     }
 
     public String getLinkFromJSON(LogHandler logger) throws IOException, ParseException{
 
-        Exception res = checkFileExists();
-        if (res != null) {
-            Platform.runLater(() -> {
-                Alert alert = new Alert(Alert.AlertType.ERROR, "Error\n"+res.toString());
-                alert.showAndWait();
-            });
-        }
+        checkFileExists();
 
         logger.log("File created");
 
@@ -93,38 +74,27 @@ public class FileHandler {
         fw.close();
     }
 
+    public void deleteEverything() {
+        //TODO: this
+    }
+
     private JSONObject getJSON() throws IOException, ParseException {
         JSONParser parser = new JSONParser();
         return (JSONObject) parser.parse(new FileReader(file));
     }
-    private Exception checkFileExists() {
-
-        try {
-            File parent = file.getParentFile();
-            if (!parent.exists()) {
-                parent.mkdirs();
-            }
-        } catch (Exception e) { //TODO: check this, added in haste
-            return e;
+    private void checkFileExists() throws IOException {
+        File parent = file.getParentFile();
+        if (!parent.exists()) {
+            boolean res = parent.mkdirs();
         }
-
-
         if (!file.exists()) {
-            try {
-                file.createNewFile();
+            boolean res = file.createNewFile();
 
-                FileWriter fw = new FileWriter(file);
-                fw.write(new JSONObject().toJSONString());
-                fw.flush();
-                fw.close();
-
-                return null;
-            } catch (Exception e) {
-                e.printStackTrace();
-                return e;
-            }
+            FileWriter fw = new FileWriter(file);
+            fw.write(new JSONObject().toJSONString());
+            fw.flush();
+            fw.close();
         }
-        return null;
     }
 
 }

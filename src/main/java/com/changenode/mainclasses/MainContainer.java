@@ -1,11 +1,12 @@
 package com.changenode.mainclasses;
 
 import com.changenode.DataPackage;
+import com.changenode.ErrorHandler;
 import com.changenode.FileHandler;
 import com.changenode.interfaces.DrawerInterface;
 import javafx.application.Application;
 import javafx.application.Platform;
-import javafx.event.EventHandler;
+
 import javafx.geometry.Insets;
 import javafx.geometry.Pos;
 import javafx.scene.Scene;
@@ -15,7 +16,7 @@ import javafx.scene.chart.XYChart;
 import javafx.scene.control.Label;
 import javafx.scene.image.Image;
 import javafx.scene.image.ImageView;
-import javafx.scene.input.MouseEvent;
+
 import javafx.scene.layout.*;
 import javafx.scene.paint.Color;
 import javafx.stage.Stage;
@@ -32,19 +33,18 @@ public class MainContainer extends Application {
     }
 
     @Override
-    public void start(Stage stage) throws Exception {}
+    public void start(Stage stage) {}
     private static final boolean[] autoUpdate = {true};
     private static final long refreshRate = 1800000;
     private static double preferredWindowWidth = 1500.d;
     private static double preferredWindowHeight = 900.d;
     private static Label statusLabelAU;
     private static boolean drawerOpen = false;
-    private static AnchorPane pane;
-    private static double[] originalPosition = new double[2];
+    private static final double[] originalPosition = new double[2];
     private static void buildContainer(Stage stage) {
         getPreferences();
 
-        pane = new AnchorPane();
+        AnchorPane pane = new AnchorPane();
 
         pane.setId("pane");
         Scene scene = new Scene(pane, preferredWindowWidth, preferredWindowHeight);
@@ -82,12 +82,7 @@ public class MainContainer extends Application {
         statusLabelAU.setId("statusLabelAU_ON");
 
         autoUpdateContainer.getChildren().addAll(staticLabelAU, statusLabelAU);
-        autoUpdateContainer.setOnMouseClicked(new EventHandler<MouseEvent>() {
-            @Override
-            public void handle(MouseEvent event) {
-                handleAUClick();
-            }
-        });
+        autoUpdateContainer.setOnMouseClicked(event -> handleAUClick());
 
         HBox imcont = new HBox();
         imcont.setId("refreshicon");
@@ -100,12 +95,7 @@ public class MainContainer extends Application {
         reloadImgV.setFitWidth(20);
         reloadImgV.setId("refreshicon");
         imcont.getChildren().addAll(reloadImgV);
-        imcont.setOnMouseClicked(new EventHandler<MouseEvent>() {
-            @Override
-            public void handle(MouseEvent event) {
-                refresh();
-            }
-        });
+        imcont.setOnMouseClicked(event -> refresh());
 
         containerRB.getChildren().addAll(imcont, autoUpdateContainer);
         AnchorPane.setBottomAnchor(containerRB, 15.0);
@@ -117,7 +107,7 @@ public class MainContainer extends Application {
         NumberAxis yAxis = new NumberAxis();
 
         final LineChart<Number,Number> lineChart =
-                new LineChart<Number,Number>(xAxis,yAxis);
+                new LineChart<>(xAxis, yAxis);
 
         lineChart.setAnimated(false);
         lineChart.setCreateSymbols(false);
@@ -134,22 +124,14 @@ public class MainContainer extends Application {
         AnchorPane.setRightAnchor(moveRegion, 0.0);
         AnchorPane.setLeftAnchor(moveRegion, 0.0);
 
-        moveRegion.setOnMousePressed(new EventHandler<MouseEvent>() {
-            @Override
-            public void handle(MouseEvent event) {
-                originalPosition[0] = event.getSceneX();
-                originalPosition[1] = event.getSceneY();
-            }
+        moveRegion.setOnMousePressed(event -> {
+            originalPosition[0] = event.getSceneX();
+            originalPosition[1] = event.getSceneY();
         });
-        moveRegion.setOnMouseDragged(new EventHandler<MouseEvent>() {
-            @Override
-            public void handle(MouseEvent event) {
-                Platform.runLater(() -> {
-                    stage.setX((event.getScreenX() - originalPosition[0]));
-                    stage.setY((event.getScreenY() - originalPosition[1]));
-                });
-            }
-        });
+        moveRegion.setOnMouseDragged(event -> Platform.runLater(() -> {
+            stage.setX((event.getScreenX() - originalPosition[0]));
+            stage.setY((event.getScreenY() - originalPosition[1]));
+        }));
 
         pane.getChildren().addAll(moveRegion, cornerUL, ivLogo, containerRB, lineChart);
         setOnClose();
@@ -170,10 +152,8 @@ public class MainContainer extends Application {
         Runtime.getRuntime().addShutdownHook(new Thread(() -> {
             try {
                 fh.saveDimensionsToJSON(stage.getWidth(), stage.getHeight());
-            } catch (IOException e) {
-                e.printStackTrace();
-            } catch (ParseException e) {
-                e.printStackTrace(); //handle, not critical
+            } catch (IOException | ParseException e) {
+                ErrorHandler.handle(e, ErrorHandler.Severity.MINOR);
             }
         }));
     }
@@ -225,35 +205,22 @@ public class MainContainer extends Application {
         gp.setPadding(new Insets(0, 20, 0, 0));
         gp.setId("drawerbutton");
 
-        gp.setOnMouseClicked(new EventHandler<MouseEvent>() {
-            @Override
-            public void handle(MouseEvent event) {
-                if (drawerOpen) {
-                    drawerOpen = false;
-                } else {
-                    openDrawer(gp);
-                    drawerOpen = true;
-                }
+        gp.setOnMouseClicked(event -> {
+            if (drawerOpen) {
+                drawerOpen = false;
+            } else {
+                openDrawer(gp);
+                drawerOpen = true;
             }
         });
-        gp.setOnMouseEntered(new EventHandler<MouseEvent>() {
-            @Override
-            public void handle(MouseEvent event) {
-                for (Label sq : sqrs) {
-                    Platform.runLater(() -> {
-                        sq.setId("whiteboxhover");
-                    });
-                }
+        gp.setOnMouseEntered(event -> {
+            for (Label sq : sqrs) {
+                Platform.runLater(() -> sq.setId("whiteboxhover"));
             }
         });
-        gp.setOnMouseExited(new EventHandler<MouseEvent>() {
-            @Override
-            public void handle(MouseEvent event) {
-                for (Label sq : sqrs) {
-                    Platform.runLater(() -> {
-                        sq.setId("whitebox");
-                    });
-                }
+        gp.setOnMouseExited(event -> {
+            for (Label sq : sqrs) {
+                Platform.runLater(() -> sq.setId("whitebox"));
             }
         });
 
@@ -274,7 +241,7 @@ public class MainContainer extends Application {
 
             @Override
             public void onResetAll() {
-
+                //TODO: delete all data
             }
 
             @Override
@@ -296,10 +263,8 @@ public class MainContainer extends Application {
             double[] dimensions = fh.getDimensionsFromJSON();
             preferredWindowWidth = dimensions[0];
             preferredWindowHeight = dimensions[1];
-        } catch (IOException ioe) {
-            ioe.printStackTrace(); //TODO: handle
-        } catch (ParseException pe) {
-            pe.printStackTrace(); //TODO: handle
+        } catch (IOException | ParseException ioe) {
+            ErrorHandler.handle(ioe, ErrorHandler.Severity.MINOR);
         }
     }
     private static boolean active = true;
@@ -313,7 +278,7 @@ public class MainContainer extends Application {
                     }
                 }
             } catch (Exception e) {
-                e.printStackTrace();
+                ErrorHandler.handle(e, ErrorHandler.Severity.HIGH);
             }
         });
         t.start();
