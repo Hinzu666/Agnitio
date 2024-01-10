@@ -5,4 +5,5 @@ public interface DrawerInterface {
     void onResetAll();
     void onChangeARState(boolean state);
     void onDrawerClose();
+    void onRefreshRateChange(int val);
 }

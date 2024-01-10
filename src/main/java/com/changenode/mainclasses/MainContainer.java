@@ -24,7 +24,7 @@ import javafx.stage.StageStyle;
 import org.json.simple.parser.ParseException;
 
 import java.io.IOException;
-//TODO: resize
+//TODO: resize, get refresh rate from josn
 public class MainContainer extends Application {
     public static void main(String[] args) {
         System.setProperty("prism.lcdtext", "false");
@@ -35,7 +35,7 @@ public class MainContainer extends Application {
     @Override
     public void start(Stage stage) {}
     private static final boolean[] autoUpdate = {true};
-    private static final long refreshRate = 1800000;
+    private static long refreshRate = 1800000;
     private static double preferredWindowWidth = 1500.d;
     private static double preferredWindowHeight = 900.d;
     private static Label statusLabelAU;
@@ -231,7 +231,7 @@ public class MainContainer extends Application {
         return container;
     }
     private static void openDrawer(GridPane gp) {
-        DrawerWidget drawerWidget = new DrawerWidget(stage, gp.localToScreen(0, 0).getX(), gp.localToScreen(0, 0).getY(), autoUpdate[0], new DrawerInterface() {
+        DrawerWidget drawerWidget = new DrawerWidget(stage, gp.localToScreen(0, 0).getX(), gp.localToScreen(0, 0).getY(), autoUpdate[0], refreshRate,new DrawerInterface() {
             @Override
             public void onExitRequested() {
                 stage.close();
@@ -241,7 +241,7 @@ public class MainContainer extends Application {
 
             @Override
             public void onResetAll() {
-                //TODO: delete all data
+                fh.deleteEverything();
             }
 
             @Override
@@ -252,6 +252,12 @@ public class MainContainer extends Application {
             @Override
             public void onDrawerClose() {
                 drawerOpen = false;
+            }
+
+            @Override
+            public void onRefreshRateChange(int val) {
+                refreshRate = (long) val * 60 * 1000; //TODO: write to file
+                refresh();
             }
         });
 

@@ -20,8 +20,10 @@ import javafx.stage.StageStyle;
 
 public class DrawerWidget {
     private final DrawerInterface drawerInterface;
-    public DrawerWidget(Stage root, double x, double y, boolean autoRefreshState, DrawerInterface drawerInterface) {
+    private long refreshrate;
+    public DrawerWidget(Stage root, double x, double y, boolean autoRefreshState, long refreshrate, DrawerInterface drawerInterface) {
         arStat = autoRefreshState;
+        this.refreshrate = refreshrate;
         this.drawerInterface = drawerInterface;
         build(x, y, root);
     }
@@ -218,8 +220,12 @@ public class DrawerWidget {
         Label arrlab = new Label("Auto refresh interval");
         arrlab.setId("arl"); //same as in auto refresh
         arrlab.setWrapText(true);
-        Label arrlabinfo = new Label("1 h");
+        Label arrlabinfo = new Label(formatRefreshRate());
         arrlabinfo.setId("arls_ON");
+
+        arrcont.setOnMouseClicked(event -> {
+            AutoRefreshPrompt.query(drawerInterface);
+        });
 
         AnchorPane.setLeftAnchor(arrlab, 3.0);
         AnchorPane.setTopAnchor(arrlab, 0.0);
@@ -237,6 +243,22 @@ public class DrawerWidget {
         cont.setSpacing(6);
         cont.getChildren().addAll(row0, row1);
         return cont;
+    }
+    private String formatRefreshRate() {
+        double minutes = refreshrate / 60000d;
+        if (minutes == 60) {
+            return "1 h";
+        }
+        if (minutes > 90) {
+            double hours = minutes / 60d;
+            if (hours % 1 == 0) {
+                return String.format("%.0f h", hours);
+            } else {
+                return String.format("%.1f h", hours);
+            }
+        }
+
+        return Math.round(minutes) + " min";
     }
     private void confirmReset() {
         ConfirmBox cb = new ConfirmBox(drawerInterface);
