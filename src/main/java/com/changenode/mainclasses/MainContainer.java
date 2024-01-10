@@ -40,6 +40,7 @@ public class MainContainer extends Application {
     private static Label statusLabelAU;
     private static boolean drawerOpen = false;
     private static AnchorPane pane;
+    private static double[] originalPosition = new double[2];
     private static void buildContainer(Stage stage) {
         getPreferences();
 
@@ -127,7 +128,30 @@ public class MainContainer extends Application {
         AnchorPane.setLeftAnchor(lineChart, 15.0);
         AnchorPane.setRightAnchor(lineChart, 15.0);
 
-        pane.getChildren().addAll(cornerUL, ivLogo, containerRB, lineChart);
+        Region moveRegion = new Region();
+        moveRegion.setMinHeight(75);
+        AnchorPane.setTopAnchor(moveRegion, 0.0);
+        AnchorPane.setRightAnchor(moveRegion, 0.0);
+        AnchorPane.setLeftAnchor(moveRegion, 0.0);
+
+        moveRegion.setOnMousePressed(new EventHandler<MouseEvent>() {
+            @Override
+            public void handle(MouseEvent event) {
+                originalPosition[0] = event.getSceneX();
+                originalPosition[1] = event.getSceneY();
+            }
+        });
+        moveRegion.setOnMouseDragged(new EventHandler<MouseEvent>() {
+            @Override
+            public void handle(MouseEvent event) {
+                Platform.runLater(() -> {
+                    stage.setX((event.getScreenX() - originalPosition[0]));
+                    stage.setY((event.getScreenY() - originalPosition[1]));
+                });
+            }
+        });
+
+        pane.getChildren().addAll(moveRegion, cornerUL, ivLogo, containerRB, lineChart);
         setOnClose();
         stage.show();
 
