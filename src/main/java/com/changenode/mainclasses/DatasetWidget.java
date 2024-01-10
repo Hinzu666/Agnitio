@@ -1,23 +1,18 @@
 package com.changenode.mainclasses;
 
 import com.changenode.interfaces.DatasetWidgetListener;
-import javafx.event.Event;
 import javafx.event.EventHandler;
-import javafx.event.EventType;
 import javafx.geometry.Pos;
-import javafx.scene.Node;
 import javafx.scene.control.Label;
 import javafx.scene.effect.DropShadow;
 import javafx.scene.input.MouseEvent;
 import javafx.scene.layout.HBox;
-import javafx.scene.layout.Region;
-import javafx.scene.layout.VBox;
 import javafx.scene.paint.Color;
 
 
 public class DatasetWidget  {
 
-    private HBox container;
+    private final HBox container;
     private DatasetWidgetListener listener = new DatasetWidgetListener() {
         @Override
         public void onHide() {
@@ -28,8 +23,8 @@ public class DatasetWidget  {
             System.out.println("Default listener - please initialize [show]: "+DatasetWidget.this);
         }
     };
-    private Label box, name;
-    private String identifierColorHex;
+    private final Label box;
+    private final String identifierColorHex;
     DatasetWidget (String identifierColorHex, String identifierName) {
         this.identifierColorHex = identifierColorHex;
         container = new HBox();
@@ -49,7 +44,7 @@ public class DatasetWidget  {
 
         box.setStyle("-fx-background-color: "+identifierColorHex+"; -fx-background-radius: 1px;");
 
-        name = new Label(identifierName);
+        Label name = new Label(identifierName);
         name.setId("dw_label");
 
         addHandler();

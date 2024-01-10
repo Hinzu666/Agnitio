@@ -1,23 +1,18 @@
 package com.changenode;
 
 import javafx.application.Platform;
-import javafx.scene.control.Label;
 import javafx.scene.image.Image;
 import javafx.scene.image.ImageView;
 
 import java.text.SimpleDateFormat;
 import java.util.Date;
-import java.util.Map;
 
 public class LoadTimeCounter {
-    private Thread main;
-    private long start;
+    private final Thread main;
     private boolean david = false;
-    private SimpleDateFormat sdf = new SimpleDateFormat("s");
+    private final SimpleDateFormat sdf = new SimpleDateFormat("s");
     private boolean master = true;
     LoadTimeCounter(ImageView tar, Image i0, Image i1) {
-        Date date = new Date(System.currentTimeMillis());
-        start = date.getTime();
         main = new Thread(() -> {
             try {
                 while (true) {
@@ -32,7 +27,7 @@ public class LoadTimeCounter {
                         }
                     });
                 }
-            } catch (Exception e) {e.printStackTrace();}
+            } catch (Exception e) {ErrorHandler.handle(e,ErrorHandler.Severity.MINOR);}
         });
     }
 

@@ -20,7 +20,6 @@ import javafx.scene.layout.*;
 import javafx.scene.paint.Color;
 import javafx.stage.Stage;
 import javafx.stage.StageStyle;
-import org.junit.internal.runners.ErrorReportingRunner;
 
 import java.util.Arrays;
 public class Launcher extends Application {
@@ -36,11 +35,8 @@ public class Launcher extends Application {
         try {
              setupCompleted = plh.notMyFirstTimeAroundHere();
         } catch (Exception e) {
-            Platform.runLater(() -> {
-                Alert alert = new Alert(Alert.AlertType.ERROR, "Error\n"+e+"\n"+e.getCause()+"\n"+e.getLocalizedMessage() + "\n" + Arrays.toString(e.getStackTrace()));
-                alert.showAndWait();
-            }); //TODO: added in haste
-            e.printStackTrace();
+            //TODO:
+            ErrorHandler.handle(e, ErrorHandler.Severity.HIGH);
         }
     }
     private Stage stage;
@@ -114,11 +110,7 @@ public class Launcher extends Application {
             @Override
             public void onCatch(Exception exception, int process) {
                 //TODO: handle
-                Platform.runLater(() -> {
-                    Alert alert = new Alert(Alert.AlertType.ERROR, "Error\n"+exception.toString()+"\nprocess: "+process);
-                    alert.showAndWait();
-                });
-
+                ErrorHandler.handle(exception, ErrorHandler.Severity.CRITICAL);
             }
         });
 
@@ -126,7 +118,7 @@ public class Launcher extends Application {
 
     }
     private static String[] args;
-    private void moveToMain() { //TODO: close everything
+    private void moveToMain() {
         stage.close();
         ltc.requestStop();
         scn = null;
@@ -211,7 +203,7 @@ public class Launcher extends Application {
         stage.show();
     }
     @Override
-    public void start(Stage stage) throws Exception {
+    public void start(Stage stage) {
         this.stage = stage;
 
         if (!setupCompleted) {

@@ -7,7 +7,6 @@ import javafx.scene.control.Label;
 import org.apache.poi.openxml4j.exceptions.NotOfficeXmlFileException;
 import org.json.simple.parser.ParseException;
 
-import javax.xml.crypto.Data;
 import java.io.IOException;
 import java.net.URL;
 import java.nio.file.Files;
@@ -15,10 +14,10 @@ import java.nio.file.Path;
 import java.nio.file.StandardCopyOption;
 
 public class DataHandler {
-    private LogHandler logger;
+    private final LogHandler logger;
     public static class Process {
-        public static int LOAD = 10001;
-        public static int GET_LINK_FROM_JSON = 10002;
+        public static final int LOAD = 10001;
+        public static final int GET_LINK_FROM_JSON = 10002;
     }
     private FileHandler fileHandler;
     private ErrorInterface errorInterface;
@@ -80,15 +79,8 @@ public class DataHandler {
 
                 threadInterface.onNotify();
 
-            } catch (IOException ioe) {
-                ioe.printStackTrace(); //TODO: Remove later
+            } catch (IOException | NotOfficeXmlFileException | ParseException ioe) {
                 errorInterface.onCatch(ioe, Process.LOAD);
-            } catch (ParseException pe) {
-                pe.printStackTrace(); //TODO: Remove later
-                errorInterface.onCatch(pe, Process.LOAD);
-            } catch (NotOfficeXmlFileException noxfe) {
-                noxfe.printStackTrace(); //TODO: Remove later
-                errorInterface.onCatch(noxfe, Process.LOAD);
             }
         });
         t.start();

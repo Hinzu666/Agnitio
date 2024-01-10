@@ -1,7 +1,5 @@
 package com.changenode;
 
-import javafx.application.Platform;
-import javafx.scene.control.Alert;
 import org.json.simple.JSONObject;
 import org.json.simple.parser.JSONParser;
 import org.json.simple.parser.ParseException;
@@ -10,7 +8,6 @@ import java.io.File;
 import java.io.FileReader;
 import java.io.FileWriter;
 import java.io.IOException;
-import java.util.logging.Logger;
 
 public class FileHandler {
 

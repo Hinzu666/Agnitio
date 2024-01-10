@@ -2,11 +2,11 @@ package com.changenode;
 
 public class ErrorHandler {
     public static class Severity {
-        public static int CRITICAL = 1;
-        public static int HIGH = 2;
-        public static int MODERATE = 3;
-        public static int MINOR = 4;
-        public static int IGNORE = 5;
+        public static final int CRITICAL = 1;
+        public static final int HIGH = 2;
+        public static final int MODERATE = 3;
+        public static final int MINOR = 4;
+        public static final int IGNORE = 5;
     }
     public static void handle(Exception exc, int severity) {
         if (severity == Severity.CRITICAL) {

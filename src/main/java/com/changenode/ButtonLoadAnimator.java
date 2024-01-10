@@ -5,19 +5,15 @@ import javafx.scene.control.Button;
 import javafx.scene.image.Image;
 import javafx.scene.image.ImageView;
 
-import javax.swing.text.View;
-
-
 
 public class ButtonLoadAnimator {
-    private Button btn;
-    private Thread main;
+    private final Button btn;
+    private final Thread main;
 
-    private ImageView up, down, original;
+    private final ImageView up;
+    private final ImageView down;
     private boolean master = true;
     ButtonLoadAnimator (Button btn) {
-
-        original = (ImageView) btn.getGraphic();
 
         up = new ImageView(new Image("icons/hourglass_top_FILL0_wght400_GRAD0_opsz24.png"));
         up.setFitWidth(22);
@@ -43,7 +39,7 @@ public class ButtonLoadAnimator {
                     if (!master) {break;}
                 }
             } catch (Exception e) {
-                e.printStackTrace();
+                ErrorHandler.handle(e, ErrorHandler.Severity.MINOR);
             }
         });
     }

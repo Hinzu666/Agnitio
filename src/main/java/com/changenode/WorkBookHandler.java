@@ -6,15 +6,11 @@ import org.apache.poi.ss.usermodel.*;
 import org.apache.poi.xssf.usermodel.XSSFWorkbook;
 
 import java.io.FileInputStream;
-import java.io.FileNotFoundException;
 import java.io.IOException;
-import java.util.Arrays;
-import java.util.Date;
 import java.util.Iterator;
 
 public class WorkBookHandler {
-    private String PATH;
-    private FormulaEvaluator formulaEvaluator;
+    private final String PATH;
     private Sheet sheet;
     WorkBookHandler (String PATH) {
         this.PATH = PATH;
@@ -43,17 +39,17 @@ public class WorkBookHandler {
         Workbook wb = new XSSFWorkbook(fis);
         return wb;
     }
-    private Double[] xAxisArray, yAxisArray;
+
     public DataPackage extract() throws IOException, NotOfficeXmlFileException {
         Workbook book = getObject();
 
         sheet = book.getSheetAt(0);
-        formulaEvaluator = book.getCreationHelper().createFormulaEvaluator();
+        FormulaEvaluator formulaEvaluator = book.getCreationHelper().createFormulaEvaluator();
 
         int rowCount = sheet.getPhysicalNumberOfRows();
 
-        xAxisArray = new Double[rowCount];
-        yAxisArray = new Double[rowCount];
+        Double[] xAxisArray = new Double[rowCount];
+        Double[] yAxisArray = new Double[rowCount];
 
         populate();
 

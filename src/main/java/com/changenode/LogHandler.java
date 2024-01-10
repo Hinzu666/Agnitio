@@ -7,12 +7,12 @@ import java.text.SimpleDateFormat;
 import java.util.Date;
 
 public class LogHandler {
-    private Label lab;
+    private final Label lab;
     LogHandler (Label label) {
         lab = label;
     }
 
-    private SimpleDateFormat sdf = new SimpleDateFormat("[dd.MM HH:mm:ss:SSSS] ");
+    private final SimpleDateFormat sdf = new SimpleDateFormat("[dd.MM HH:mm:ss:SSSS] ");
     private String timeFormatD() {
         Date d = new Date(System.currentTimeMillis());
         return sdf.format(d.getTime());

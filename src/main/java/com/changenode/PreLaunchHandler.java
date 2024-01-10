@@ -7,9 +7,7 @@ import org.json.simple.parser.ParseException;
 import java.io.*;
 
 public class PreLaunchHandler {
-    private JSONObject json;
-    private File file;
-    private String PATH = "src/main/resources/data/userdata.JSON";
+    private final String PATH = "src/main/resources/data/userdata.JSON";
     boolean notMyFirstTimeAroundHere() throws IOException, ParseException {
 
         //check if datafile exists
@@ -18,12 +16,9 @@ public class PreLaunchHandler {
         if (!checkFileAvailibility()) {
             return false;
         }
-        json = getJSON();
+        JSONObject json = getJSON();
 
-        if (!json.containsKey("SavedLink")) {
-            return false;
-        }
-        return true;
+        return json.containsKey("SavedLink");
     }
 
     private JSONObject getJSON() throws IOException, ParseException {
@@ -31,7 +26,7 @@ public class PreLaunchHandler {
         return (JSONObject) parser.parse(new FileReader(PATH));
     }
     private boolean checkFileAvailibility() throws IOException {
-        file = new File(PATH);
+        File file = new File(PATH);
         File parent = file.getParentFile();
         if (!parent.exists()) { //TODO: check this, added in haste
             parent.mkdirs();

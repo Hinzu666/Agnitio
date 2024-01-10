@@ -18,9 +18,8 @@ import javafx.scene.paint.Color;
 import javafx.stage.Stage;
 import javafx.stage.StageStyle;
 
-import java.io.StringReader;
 public class DrawerWidget {
-    private DrawerInterface drawerInterface;
+    private final DrawerInterface drawerInterface;
     public DrawerWidget(Stage root, double x, double y, boolean autoRefreshState, DrawerInterface drawerInterface) {
         arStat = autoRefreshState;
         this.drawerInterface = drawerInterface;
@@ -71,9 +70,7 @@ public class DrawerWidget {
         resetcont.setOnMouseClicked(new EventHandler<MouseEvent>() {
             @Override
             public void handle(MouseEvent event) {
-                if (confirmReset()) {
-                    drawerInterface.onResetAll();
-                }
+                confirmReset();
             }
         });
 
@@ -241,8 +238,7 @@ public class DrawerWidget {
         cont.getChildren().addAll(row0, row1);
         return cont;
     }
-    private boolean confirmReset() {
+    private void confirmReset() {
         ConfirmBox cb = new ConfirmBox(drawerInterface);
-        return false;
     }
 }
