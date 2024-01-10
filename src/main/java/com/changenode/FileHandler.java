@@ -30,6 +30,29 @@ public class FileHandler {
         fw.close();
     }
 
+    public void saveToJSON(String key, Object value) throws IOException, ParseException {
+        checkFileExists();
+
+        JSONObject json;
+        json = getJSON();
+
+        json.put(key, value);
+
+        FileWriter fw = new FileWriter(file);
+        fw.write(json.toJSONString());
+        fw.flush();
+        fw.close();
+    }
+    public Object getFromJSON(String key) throws IOException, ParseException {
+        checkFileExists();
+
+        JSONObject json = getJSON();
+
+        if (json.containsKey(key)) {
+            return json.get(key);
+        }
+        return null;
+    }
     public String getLinkFromJSON(LogHandler logger) throws IOException, ParseException{
 
         checkFileExists();

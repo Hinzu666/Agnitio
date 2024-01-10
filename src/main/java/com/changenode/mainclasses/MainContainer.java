@@ -161,8 +161,9 @@ public class MainContainer extends Application {
         Runtime.getRuntime().addShutdownHook(new Thread(() -> {
             try {
                 fh.saveDimensionsToJSON(stage.getWidth(), stage.getHeight());
+                fh.saveToJSON("autoRefreshRate", refreshRate);
             } catch (IOException | ParseException e) {
-                ErrorHandler.handle(e, ErrorHandler.Severity.MINOR);
+                ErrorHandler.handle(e, ErrorHandler.Severity.MODERATE);
             }
         }));
     }
@@ -267,7 +268,7 @@ public class MainContainer extends Application {
 
             @Override
             public void onRefreshRateChange(int val) {
-                refreshRate = (long) val * 60 * 1000; //TODO: write to file
+                refreshRate = (long) val * 60 * 1000;
                 refresh();
             }
         });
@@ -280,6 +281,10 @@ public class MainContainer extends Application {
             double[] dimensions = fh.getDimensionsFromJSON();
             preferredWindowWidth = dimensions[0];
             preferredWindowHeight = dimensions[1];
+            Object result = fh.getFromJSON("autoRefreshRate");
+            if (result != null) {
+                refreshRate = (long) result;
+            }
         } catch (IOException | ParseException ioe) {
             ErrorHandler.handle(ioe, ErrorHandler.Severity.MINOR);
         }
