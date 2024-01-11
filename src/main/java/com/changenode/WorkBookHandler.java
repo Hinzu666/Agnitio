@@ -12,6 +12,7 @@ import java.util.Iterator;
 public class WorkBookHandler {
     private final String PATH;
     private Sheet sheet;
+    private FileInputStream fis;
     WorkBookHandler (String PATH) {
         this.PATH = PATH;
     }
@@ -35,11 +36,11 @@ public class WorkBookHandler {
 
     }
     private Workbook getObject() throws IOException {
-        FileInputStream fis = new FileInputStream(PATH);
+        fis = new FileInputStream(PATH);
         Workbook wb = new XSSFWorkbook(fis);
+        fis.close();
         return wb;
     }
-
     public DataPackage extract() throws IOException, NotOfficeXmlFileException {
         Workbook book = getObject();
 

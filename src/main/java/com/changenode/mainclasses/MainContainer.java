@@ -3,6 +3,7 @@ package com.changenode.mainclasses;
 import com.changenode.DataPackage;
 import com.changenode.ErrorHandler;
 import com.changenode.FileHandler;
+import com.changenode.LogHandler;
 import com.changenode.interfaces.DrawerInterface;
 import javafx.application.Application;
 import javafx.application.Platform;
@@ -25,7 +26,10 @@ import javafx.stage.StageStyle;
 import org.json.simple.parser.ParseException;
 
 import java.io.IOException;
-//TODO: resize, get refresh rate from josn
+import java.text.SimpleDateFormat;
+import java.util.Date;
+
+//TODO: resize
 public class MainContainer extends Application {
     public static void main(String[] args) {
         System.setProperty("prism.lcdtext", "false");
@@ -42,6 +46,7 @@ public class MainContainer extends Application {
     private static Label statusLabelAU;
     private static boolean drawerOpen = false;
     private static final double[] originalPosition = new double[2];
+    private static Label statusLabel;
     public static DropShadow dropShadow;
     private static void buildContainer(Stage stage) {
         getPreferences();
@@ -142,7 +147,13 @@ public class MainContainer extends Application {
             stage.setY((event.getScreenY() - originalPosition[1]));
         }));
 
-        pane.getChildren().addAll(moveRegion, cornerUL, ivLogo, containerRB, lineChart);
+        statusLabel = new Label();
+        statusLabel.setId("statusLabel");
+
+        AnchorPane.setLeftAnchor(statusLabel, 15.0);
+        AnchorPane.setBottomAnchor(statusLabel, 15.0);
+
+        pane.getChildren().addAll(moveRegion, cornerUL, ivLogo, containerRB, lineChart, statusLabel);
         setOnClose();
         stage.show();
 
@@ -155,6 +166,9 @@ public class MainContainer extends Application {
     private DataPackage data;
     private static Stage stage;
     private static void refresh() {
+        Platform.runLater(() -> {
+            statusLabel.setText("Data updated @ "+ LogHandler.sdf_short.format(new Date(System.currentTimeMillis()).getTime()));
+        });
         //TODO: reload data
     }
     private static void setOnClose() {
@@ -253,7 +267,9 @@ public class MainContainer extends Application {
 
             @Override
             public void onResetAll() {
-                fh.deleteEverything();
+                boolean result = fh.deleteEverything(); //TODO: make sure xlsx is closed first
+                LogHandler logger = new LogHandler(statusLabel);
+                logger.log("File deletion status: "+result, true);
             }
 
             @Override

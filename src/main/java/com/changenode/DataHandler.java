@@ -15,6 +15,7 @@ import java.nio.file.StandardCopyOption;
 
 public class DataHandler {
     private final LogHandler logger;
+    private WorkBookHandler wbh;
     public static class Process {
         public static final int LOAD = 10001;
         public static final int GET_LINK_FROM_JSON = 10002;
@@ -25,7 +26,6 @@ public class DataHandler {
     DataHandler (LogHandler logger) {
         this.logger = logger;
     }
-
     public void setErrorInterface(ErrorInterface ei) {
         errorInterface = ei;
     }
@@ -73,9 +73,8 @@ public class DataHandler {
 
                 logger.log("Formatting data");
 
-                WorkBookHandler wbh = new WorkBookHandler(PATH_TO_TEMP+"temp.xlsx");
+                wbh = new WorkBookHandler(PATH_TO_TEMP+"temp.xlsx");
                 wbh.extract();
-
 
                 threadInterface.onNotify();
 

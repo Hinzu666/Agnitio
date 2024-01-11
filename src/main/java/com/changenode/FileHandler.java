@@ -94,8 +94,9 @@ public class FileHandler {
         fw.close();
     }
 
-    public void deleteEverything() {
-        //TODO: this
+    public boolean deleteEverything() {
+        File xlsx = new File("src/main/resources/data/temp.xlsx");
+        return file.delete() && xlsx.delete();
     }
 
     private JSONObject getJSON() throws IOException, ParseException {

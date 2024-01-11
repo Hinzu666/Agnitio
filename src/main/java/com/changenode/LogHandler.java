@@ -8,16 +8,17 @@ import java.util.Date;
 
 public class LogHandler {
     private final Label lab;
-    LogHandler (Label label) {
+    public LogHandler(Label label) {
         lab = label;
     }
 
-    private final SimpleDateFormat sdf = new SimpleDateFormat("[dd.MM HH:mm:ss:SSSS] ");
+    public static final SimpleDateFormat sdf = new SimpleDateFormat("[dd.MM HH:mm:ss:SSSS] ");
+    public static final SimpleDateFormat sdf_short = new SimpleDateFormat("[dd.MM HH:mm] ");
     private String timeFormatD() {
         Date d = new Date(System.currentTimeMillis());
         return sdf.format(d.getTime());
     }
-    void log (String data) {
+    public void log(String data) {
         System.out.println(timeFormatD() + data);
         sett(data);
     }
@@ -37,7 +38,7 @@ public class LogHandler {
             sett(pref + data);
         }
     }
-    void log (String data, boolean format) {
+    public void log(String data, boolean format) {
         String formattedData = timeFormatD() + data;
         System.out.println(formattedData);
         if (format) {
