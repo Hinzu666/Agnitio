@@ -3,6 +3,9 @@
     -fx-background-radius: 5px;
     -fx-font-family: 'Arial Narrow';
     -fx-text-fill: #dadada;
+    -fx-border-width: 1px;
+    -fx-border-radius: 5px;
+    -fx-border-color: "#dadada40";
 }
 #whitebox {
     -fx-background-color: #dadada;
@@ -74,7 +77,7 @@
     -fx-border-width: 1.5px;
 }
 #aucontainer:hover {
-    -fx-border-color: #dadada99;
+    -fx-border-color: #dadadaa0;
     -fx-border-style: solid inside;
     -fx-border-radius: 2.5px;
     -fx-border-width: 1.5px;
@@ -92,10 +95,13 @@
     -fx-background-color: #1d1e25;
 }
 #statusLabel {
-    -fx-text-fill: #dadada66;
+    -fx-text-fill: #dadada99;
     -fx-font-family: "Arial Narrow";
     -fx-font-smoothing-type: gray;
     -fx-font-size: 14px;
+}
+#xaxis:hover {
+    -fx-cursor: H_RESIZE;
 }
 .chart-plot-background {
     -fx-background-color: #1d1e25;
@@ -108,4 +114,9 @@
 }
 .chart-content {
     -fx-padding: 0px;
+}
+.axis-label {
+  -fx-text-fill: #dadadaa0;
+  -fx-font-family: "Arial Narrow";
+  -fx-font-size: 14px;
 }

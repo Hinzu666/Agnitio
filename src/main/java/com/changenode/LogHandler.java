@@ -7,7 +7,7 @@ import java.text.SimpleDateFormat;
 import java.util.Date;
 
 public class LogHandler {
-    private final Label lab;
+    private Label lab;
     public LogHandler(Label label) {
         lab = label;
     }
@@ -21,6 +21,9 @@ public class LogHandler {
     public void log(String data) {
         System.out.println(timeFormatD() + data);
         sett(data);
+    }
+    public void setTarget(Label lab) {
+        this.lab = lab;
     }
     void log (String data, boolean format, boolean append) {
         String stamp = timeFormatD();

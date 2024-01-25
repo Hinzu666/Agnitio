@@ -5,6 +5,7 @@ import javafx.event.EventHandler;
 import javafx.geometry.Pos;
 import javafx.scene.control.Label;
 import javafx.scene.effect.DropShadow;
+import javafx.scene.input.MouseButton;
 import javafx.scene.input.MouseEvent;
 import javafx.scene.layout.HBox;
 import javafx.scene.paint.Color;
@@ -19,7 +20,7 @@ public class DatasetWidget  {
             System.out.println("Default listener - please initialize [hide]: "+DatasetWidget.this);
         }
         @Override
-        public void onShow() {
+        public void onShow(boolean master) {
             System.out.println("Default listener - please initialize [show]: "+DatasetWidget.this);
         }
     };
@@ -61,29 +62,43 @@ public class DatasetWidget  {
         container.setOnMouseClicked(new EventHandler<MouseEvent>() {
             @Override
             public void handle(MouseEvent event) {
-                if (enabled) {
-                    enabled = false;
-                    //disable
-
-                    container.setId("datasetwidgetcontainerDisabled");
-                    box.setStyle("-fx-background-color: #dadada99; -fx-background-radius: 1px;");
-
-                    listener.onHide();
-
-                } else {
-                    enabled = true;
-                    //enable
-
-                    container.setId("datasetwidgetcontainer");
-                    box.setStyle("-fx-background-color: "+identifierColorHex+"; -fx-background-radius: 1px;");
-
-                    listener.onShow();
-
+                MouseButton but = event.getButton();
+                if (but == MouseButton.PRIMARY) {
+                    toggleShow();
+                } else if (but == MouseButton.SECONDARY) {
+                    listener.onShow(true);
                 }
+
             }
         });
     }
+    public void hide() {
+        if (enabled) {
+            enabled = false;
+            container.setId("datasetwidgetcontainerDisabled");
+            box.setStyle("-fx-background-color: #dadada99; -fx-background-radius: 1px;");
 
+            listener.onHide();
+        }
+    }
+    public void show() {
+        if (!enabled) {
+            enabled = true;
+            //enable
+
+            container.setId("datasetwidgetcontainer");
+            box.setStyle("-fx-background-color: "+identifierColorHex+"; -fx-background-radius: 1px;");
+
+            listener.onShow(false);
+        }
+    }
+    private void toggleShow() {
+        if (enabled) {
+            hide();
+        } else {
+            show();
+        }
+    }
     public HBox getNode() {
         return container;
     }
