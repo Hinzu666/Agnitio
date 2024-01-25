@@ -73,10 +73,16 @@ public class FileHandler {
         double[] ret = new double[2];
 
         if (json.containsKey("preferredWidth")) {
-            ret[0] = (double) json.get("preferredWidth");
+            Object o = json.get("preferredWidth");
+            if (o != null) {
+                ret[0] = (double) json.get("preferredWidth");
+            }
         }
         if (json.containsKey("preferredHeight")) {
-            ret[1] = (double) json.get("preferredHeight");
+            Object o = json.get("preferredHeight");
+            if (o != null) {
+                ret[1] = (double) json.get("preferredHeight");
+            }
         }
 
         return ret;

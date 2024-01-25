@@ -4,9 +4,11 @@ import com.changenode.interfaces.ErrorInterface;
 import com.changenode.interfaces.ThreadInterface;
 import javafx.application.Platform;
 import javafx.scene.control.Label;
+import jdk.jfr.DataAmount;
 import org.apache.poi.openxml4j.exceptions.NotOfficeXmlFileException;
 import org.json.simple.parser.ParseException;
 
+import java.io.File;
 import java.io.IOException;
 import java.net.URL;
 import java.nio.file.Files;
@@ -23,13 +25,16 @@ public class DataHandler {
     private FileHandler fileHandler;
     private ErrorInterface errorInterface;
     private ThreadInterface threadInterface;
-    DataHandler (LogHandler logger) {
+    public DataHandler(LogHandler logger) {
         this.logger = logger;
     }
     public void setErrorInterface(ErrorInterface ei) {
         errorInterface = ei;
     }
     public void setThreadInterface(ThreadInterface ti) {threadInterface = ti;}
+    public DataPackage getPackage() {
+        return wbh.dataPackage;
+    }
     public void load(Label addr) {
         Thread t = new Thread(() -> {
             try {
@@ -46,18 +51,21 @@ public class DataHandler {
                 if (link.equals("404")) {
                     errorInterface.onCatch(new IOException("getLinkFromJSON() reported: 404"),Process.GET_LINK_FROM_JSON);
                 }
-                String addrHint;
 
-                logger.log("Updating hint");
+                if (addr != null) {
+                    String addrHint;
 
-                if (link.length() > 46) {
-                    addrHint = "..." + link.substring(link.length() - 46);
-                } else {
-                    addrHint = link;
+                    logger.log("Updating hint");
+
+                    if (link.length() > 46) {
+                        addrHint = "..." + link.substring(link.length() - 46);
+                    } else {
+                        addrHint = link;
+                    }
+                    Platform.runLater(() -> {
+                        addr.setText(addrHint);
+                    });
                 }
-                Platform.runLater(() -> {
-                    addr.setText(addrHint);
-                });
 
                 logger.log("Opening URL connection");
 
@@ -69,7 +77,10 @@ public class DataHandler {
                 Files.createDirectories(destination.getParent());
 
                 logger.log("Downloading updates");
+                long startTime = System.currentTimeMillis();
                 Files.copy(url.openStream(), destination, StandardCopyOption.REPLACE_EXISTING);
+
+                logger.log("Download completed time elapsed (ms): "+(System.currentTimeMillis()-startTime)+", size (bytes): "+Files.size(destination));
 
                 logger.log("Formatting data");
 

@@ -39,6 +39,8 @@ public class Launcher extends Application {
             ErrorHandler.handle(e, ErrorHandler.Severity.HIGH);
         }
     }
+
+    //TODO: handle HTTP response code 403, remove saved link and report issue
     private Stage stage;
     private LogHandler logger;
     private Scene scn;
@@ -102,7 +104,7 @@ public class Launcher extends Application {
             @Override
             public void onNotify() {
                 Platform.runLater(() -> {
-                    moveToMain();
+                    moveToMain(dh.getPackage());
                 });
             }
         });
@@ -118,12 +120,14 @@ public class Launcher extends Application {
 
     }
     private static String[] args;
-    private void moveToMain() {
+    private void moveToMain(DataPackage dataPackage) {
+        System.out.println(dataPackage.getData().size());
         stage.close();
         ltc.requestStop();
         scn = null;
         stage = null;
-        MainContainer.main(new String[]{}); //TODO: revisit if this is actually a good idea
+        MainContainer mc = new MainContainer();
+        mc.main(new String[]{}, dataPackage);
     }
     private void setup() {
         VBox vb = new VBox();
